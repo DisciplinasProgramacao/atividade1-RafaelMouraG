@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.function.Consumer;
 
 /** 
  * MIT License
@@ -32,44 +33,50 @@ public class App {
     static Random aleatorio = new Random(42);
     static long operacoes;
     static double nanoToMilli = 1.0/1_000_000;
+    static double duracao;
 
     /**
-     * Código de teste 1. Este método...
+     * Código de teste 1. Este método conta os numeros pares de 2 em 2.
      * @param vetor Vetor com dados para teste.
      * @return Uma resposta que significa....
      */
     static int codigo1(int[] vetor) {
         int resposta = 0;
+        operacoes=0;
         for (int i = 0; i < vetor.length; i += 2) {
+            operacoes +=4;
             resposta += vetor[i]%2;
         }
         return resposta;
     }
 
     /**
-     * Código de teste 2. Este método...
+     * Código de teste 2. Este método soma todos os logaritmos.
      * @param vetor Vetor com dados para teste.
      * @return Uma resposta que significa....
      */
     static int codigo2(int[] vetor) {
         int contador = 0;
+        operacoes = 0;
         for (int k = (vetor.length - 1); k > 0; k /= 2) {
             for (int i = 0; i <= k; i++) {
                 contador++;
             }
-
         }
+        operacoes = contador;
         return contador;
     }
 
     /**
-     * Código de teste 3. Este método...
+     * Código de teste 3. Este método realiza seleção por ordenação.
      * @param vetor Vetor com dados para teste.
      */
     static void codigo3(int[] vetor) {
+        operacoes = 0;
         for (int i = 0; i < vetor.length - 1; i++) {
             int menor = i;
             for (int j = i + 1; j < vetor.length; j++) {
+                operacoes ++;
                 if (vetor[j] < vetor[menor])
                     menor = j;
             }
@@ -80,15 +87,18 @@ public class App {
     }
 
     /**
-     * Código de teste 4 (recursivo). Este método...
+     * Código de teste 4 (recursivo). Este método realiza o fibonacci
      * @param n Ponto inicial do algoritmo
      * @return Um inteiro que significa...
      */
     static int codigo4(int n) {
-        if (n <= 2)
+        if (n <= 2){
+            operacoes++;
             return 1;
-        else
-            return codigo4(n - 1) + codigo4(n - 2);
+        }
+        else{
+            operacoes +=2;
+            return codigo4(n - 1) + codigo4(n - 2);}
     }
 
     /**
@@ -104,7 +114,42 @@ public class App {
         return vetor;
         
     }
+    public static String exercutarteste(int[] vetor, Consumer funcao){
+        marcarTempo(vetor, funcao);
+       
+        return String.format("Tamanho: %,2d | Operações: %,2d | tempo: %,2f ms", vetor.length, operacoes, duracao);
+    }
+
+    public static void marcarTempo(int[] vetor, Consumer funcao){
+        long inicio = System.nanoTime();
+        funcao.accept(vetor);
+        codigo1(vetor);
+        duracao = (System.nanoTime()-inicio)*nanoToMilli;
+    }
     public static void main(String[] args) {
-        
+       int[] tamanhosTeste = tamanhosTesteGrande;
+       Consumer funcao = (Consumer)App::codigo1;
+       for(int i = 0; i< tamanhosTeste.length;i++){
+        int[] vetor =  gerarVetor(tamanhosTeste[i]);
+        exercutarteste(vetor, funcao);
+        funcao = App::codigo2;
+        exercutarteste(vetor, funcao);
+       }
+
+
+
+       /*for(int i =0; i< tamanhosTeste.length;i++){
+        int[] vetorDados = gerarVetor(tamanhosTeste[i]);
+        System.out.println(exercutarteste((vetorDados)));        
+       }*/
+
+
+       /*for(int i =0; i< tamanhosTeste.length;i++){
+        operacoes=0;
+        long inicio = System.nanoTime();
+        codigo4(tamanhosTeste[i]);
+        duracao = (System.nanoTime()-inicio)*nanoToMilli;
+        System.out.printf("Tamanho: %,2d | Operações: %,2d | tempo: %,2f ms\n", tamanhosTeste[i], operacoes, duracao);
+       }*/
     }
 }

@@ -128,7 +128,7 @@ public class App {
     }
     public static void main(String[] args) {
        int[] tamanhosTeste = tamanhosTesteGrande;
-       Consumer funcao = (Consumer)App::codigo1;
+       Consumer <int[] > funcao=App::codigo1;
        for(int i = 0; i< tamanhosTeste.length;i++){
         int[] vetor =  gerarVetor(tamanhosTeste[i]);
         exercutarteste(vetor, funcao);

@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 
 
 public class Bubblesort<T extends Comparable<T>> implements IOrdenador<T>{
@@ -17,28 +18,33 @@ public class Bubblesort<T extends Comparable<T>> implements IOrdenador<T>{
 
 	@Override
 	public T[] ordenar(T[] dados) {
-		T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
-		int tamanho = dadosOrdenados.length;
-		
-		inicio = LocalDateTime.now();
-		
-		for (int posReferencia = tamanho - 1; posReferencia > 0; posReferencia--) {
-			int trocas = 0;
-			for (int posicao = 0; posicao < posReferencia; posicao++) {
-				comparacoes++;
-				if (dadosOrdenados[posicao].compareTo(dadosOrdenados[posicao+1]) > 0){
-					swap (posicao, posicao + 1, dadosOrdenados);
-					trocas++;
-				}
-			}
-			if(trocas == 0 )
-				posReferencia = 0;
-		}	
-		termino = LocalDateTime.now();
-
-		return dadosOrdenados;
+		return ordenar(dados, T::compareTo);
 	}
 	
+@Override
+ public T[] ordenar(T[] dados, Comparator<T> comparador){
+	T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
+	int tamanho = dadosOrdenados.length;
+	
+	inicio = LocalDateTime.now();
+	
+	for (int posReferencia = tamanho - 1; posReferencia > 0; posReferencia--) {
+		int trocas = 0;
+		for (int posicao = 0; posicao < posReferencia; posicao++) {
+			comparacoes++;
+			if (comparador.compare(dadosOrdenados[posicao], dadosOrdenados[posicao+1]) > 0){
+				swap (posicao, posicao + 1, dadosOrdenados);
+				trocas++;
+			}
+		}
+		if(trocas == 0 )
+			posReferencia = 0;
+	}	
+	termino = LocalDateTime.now();
+
+	return dadosOrdenados;
+}
+
 	private void swap(int i, int j, T[] vet) {
 		movimentacoes++;
 		

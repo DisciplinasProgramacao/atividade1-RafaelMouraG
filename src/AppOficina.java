@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
@@ -93,6 +94,14 @@ public class AppOficina {
         return lerNumero("Digite sua opção", Integer.class);
     }
 
+   static int  exibirMenuOrdenacao(){
+    cabecalho();
+        System.out.println("1 - Padrão");
+        System.out.println("2 - Ordenar por valor");     
+        System.out.println("0 - Finalizar");
+       
+        return lerNumero("Digite sua opção", Integer.class);
+   }
     
 
     // #endregion
@@ -157,14 +166,24 @@ public class AppOficina {
     static void ordenarProdutos(){
         cabecalho();
         
+        Comparator<Produto> comp = null;
         int opcao = exibirMenuOrdenadores();
+        int ordencao = exibirMenuOrdenacao();
         switch (opcao) {
             case 1 -> ordenador = new Bubblesort<>();
             case 2 -> ordenador = new InsertSort<>();
         }
 
+        switch (ordencao) {
+            
+            case 1-> comp = Produto::compareTo;
+            case 2-> comp = new ComparadorPorValor();
+
+        }
+
+
         if(ordenador!=null){
-            produtos = ordenador.ordenar(produtos);        
+            produtos = ordenador.ordenar(produtos, comp);        
             System.out.println("Tempo gasto: "+ordenador.getTempoOrdenacao()+" ms.");
         }
         ordenador = null;

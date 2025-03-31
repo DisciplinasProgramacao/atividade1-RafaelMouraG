@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 
@@ -18,6 +19,10 @@ public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 
 	@Override
 	public T[] ordenar(T[] dados) {
+		return ordenar(dados, T::compareTo);
+	}
+
+	public T[] ordenar(T[] dados, Comparator<T> comparador){
 		T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
 		int tamanho = dadosOrdenados.length;
 		
@@ -27,7 +32,7 @@ public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 			T valor = dadosOrdenados[posReferencia];
             int j = posReferencia-1;
             comparacoes++;
-            while(j >=0 && valor.compareTo(dadosOrdenados[j]) <0){
+            while(j >=0 && comparador.compare(valor, dadosOrdenados[j]) <0){
                 j--;
                 comparacoes++;
             }
@@ -40,7 +45,7 @@ public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 
 		return dadosOrdenados;
 	}
-	
+
 	private void copiarDados(int inicio, int fim, T[] vet) {
 		for (int i = fim; i > inicio; i--) {
             movimentacoes++;
